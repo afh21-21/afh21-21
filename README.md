@@ -16,6 +16,6 @@
 
 <a href="https://t.me/@LeonardoFlynn"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/social-1-dark.svg"><img src="assets/social-1-light.svg" width="56" alt="telegram"></picture></a>&nbsp;<a href="https://discord.com/1352214863895728128"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/social-2-dark.svg"><img src="assets/social-2-light.svg" width="56" alt="discord"></picture></a>&nbsp;<a href="https://github.com/afh21-21"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/social-3-dark.svg"><img src="assets/social-3-light.svg" width="56" alt="github"></picture></a>
 
-<a href="https://metawka.github.io/expressive-profile/?from=afh21-21"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/credit-dark.svg"><img src="assets/credit-light.svg" width="auto" alt="Made with Expressive Profile"></picture></a>
+<a href="https://metawka.github.io/expressive-profile/?from=afh21-21"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/credit-dark.svg"><img src="assets/credit-light.svg" width="auto" alt="Made with Me"></picture></a>
 
 </div>
