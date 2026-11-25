@@ -19,3 +19,4 @@
 <a href="https://metawka.github.io/expressive-profile/?from=afh21-21"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/credit-dark.svg"><img src="assets/credit-light.svg" width="auto" alt="Made with Expressive Profile"></picture></a>
 
 </div>
+have little typo
