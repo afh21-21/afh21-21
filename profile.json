@@ -1,0 +1,235 @@
+{
+  "version": 1,
+  "login": "afh21-21",
+  "seed": "#E3AB20",
+  "seedFromAvatar": true,
+  "scheme": "tonalSpot",
+  "motion": true,
+  "iconFill": true,
+  "order": [
+    "hero",
+    "about",
+    "stack",
+    "projects",
+    "stats",
+    "streak",
+    "wave",
+    "buttons",
+    "socials"
+  ],
+  "hidden": [],
+  "hero": {
+    "greeting": "Hi, I'm",
+    "name": "",
+    "subtitle": "The Craftmanship and The Ownership of\n©⌬The_Flynner's⌬_",
+    "typing": true,
+    "avatarShape": "cookie12",
+    "chips": [
+      {
+        "icon": "code",
+        "label": "TypeScript · Node.js"
+      },
+      {
+        "icon": "adb",
+        "label": "Android Developer"
+      }
+    ]
+  },
+  "about": {
+    "title": "About Me & My Enthusiast ",
+    "items": [
+      {
+        "icon": "code",
+        "label": "Building WolfieMD & Automated Digital Realms"
+      },
+      {
+        "icon": "person",
+        "label": "Independent Bot Crafter & System Tinkerer"
+      },
+      {
+        "icon": "bolt",
+        "label": "The Chaos Control — Gotta Go Fast!"
+      },
+      {
+        "icon": "nest_clock_farsight_analog",
+        "label": "Fix The Past, Not Change Future."
+      },
+      {
+        "icon": "work",
+        "label": "Business is Business, Learn That."
+      },
+      {
+        "icon": "favorite",
+        "label": "Pain is my ally • Game On • VIII."
+      },
+      {
+        "icon": "workspace_premium",
+        "label": "All You Touch You Change It"
+      },
+      {
+        "icon": "trophy",
+        "label": "Old But Gold."
+      }
+    ]
+  },
+  "stack": {
+    "title": "Tech stack",
+    "groups": [
+      {
+        "title": "Main",
+        "items": [
+          {
+            "icon": "brand:javascript",
+            "label": "JavaScript"
+          },
+          {
+            "icon": "brand:typescript",
+            "label": "TypeScript"
+          },
+          {
+            "icon": "brand:python",
+            "label": "Python"
+          },
+          {
+            "icon": "brand:nodedotjs",
+            "label": "NodeJS"
+          },
+          {
+            "icon": "brand:html5",
+            "label": "HTML5"
+          },
+          {
+            "icon": "brand:kotlin",
+            "label": "Kotlin"
+          },
+          {
+            "icon": "brand:shell",
+            "label": "Shell"
+          }
+        ]
+      },
+      {
+        "title": "Systems & Environment",
+        "items": [
+          {
+            "icon": "brand:archlinux",
+            "label": "ArchLinux"
+          },
+          {
+            "icon": "brand:android",
+            "label": "Android"
+          },
+          {
+            "icon": "brand:linux",
+            "label": "Linux"
+          },
+          {
+            "icon": "brand:macos",
+            "label": "macOS"
+          },
+          {
+            "icon": "desktop_windows",
+            "label": "Windows"
+          }
+        ]
+      },
+      {
+        "title": "Tools",
+        "items": [
+          {
+            "icon": "brand:git",
+            "label": "Git"
+          },
+          {
+            "icon": "brand:github",
+            "label": "GitHub"
+          },
+          {
+            "icon": "brand:gitlab",
+            "label": "GitLab"
+          },
+          {
+            "icon": "adb",
+            "label": "ADB / Android Studio"
+          },
+          {
+            "icon": "brand:googlegemini",
+            "label": "Gemini AI"
+          },
+          {
+            "icon": "brand:neovim",
+            "label": "Neovim"
+          },
+          {
+            "icon": "brand:vim",
+            "label": "Vim"
+          },
+          {
+            "icon": "brand:grapheneos",
+            "label": "GrapheneOS"
+          }
+        ]
+      }
+    ]
+  },
+  "projects": {
+    "source": "pinned",
+    "repos": [],
+    "overrides": {},
+    "empty": "No description yet.",
+    "fork": "Fork"
+  },
+  "stats": {
+    "title": "GitHub Activity",
+    "stars": "Stars",
+    "contributions": "Commits & Actions",
+    "repos": "Artifacts",
+    "followers": "Allies",
+    "calendar": "Last 21 days",
+    "weekdays": "SMTWTFS",
+    "languages": "Languages across my repositories",
+    "showLanguages": true
+  },
+  "streak": {
+    "title": "Streak",
+    "current": "Current streak",
+    "longest": "Longest this year",
+    "days": "days"
+  },
+  "socials": {
+    "items": [
+      {
+        "icon": "brand:telegram",
+        "url": "https://t.me/@LeonardoFlynn"
+      },
+      {
+        "icon": "brand:discord",
+        "url": "https://discord.com/1352214863895728128"
+      },
+      {
+        "icon": "brand:github",
+        "url": "https://github.com/afh21-21"
+      }
+    ],
+    "variant": "icon",
+    "fill": "outlined",
+    "card": false
+  },
+  "buttons": {
+    "items": [
+      {
+        "icon": "language",
+        "label": "LinkTree",
+        "url": "https://example.com",
+        "style": "tonal"
+      },
+      {
+        "icon": "book_2",
+        "label": "All repositories",
+        "url": "",
+        "style": "tonal"
+      }
+    ],
+    "card": false
+  }
+}
