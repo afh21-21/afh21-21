@@ -1,6 +1,6 @@
 {
- "stars": 1,
- "contributions": 86,
+ "stars": 2,
+ "contributions": 95,
  "repos": 2,
  "followers": 0,
  "languages": [],
@@ -101,9 +101,9 @@
     "today": false
    },
    {
-    "c": 34,
+    "c": 43,
     "day": 26,
-    "today": true
+    "today": false
    },
    null,
    null
@@ -115,7 +115,7 @@
    "url": "https://github.com/afh21-21/afh21-21.github.io",
    "text": "my LinkTREE website",
    "fork": false,
-   "stars": 0,
+   "stars": 1,
    "language": "HTML",
    "topics": []
   },
