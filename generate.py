@@ -12,9 +12,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 OUT = ROOT / "assets"
-USER = "afh21-21"
 W = 840
 WIB = datetime.timezone(datetime.timedelta(hours=7))
+
+CFG = json.loads((ROOT / "profile.json").read_text(encoding="utf-8"))
+USER = CFG.get("login", "afh21-21")
 
 PALETTE = json.loads((ROOT / "data/palette.json").read_text(encoding="utf-8"))
 ICONS = json.loads((ROOT / "data/icons.json").read_text(encoding="utf-8"))
@@ -38,32 +40,15 @@ ICON_RULES = [
 ]
 
 LANG_ICONS = {
-    "JavaScript": "code",
+    "JavaScript": "brand:javascript",
     "TypeScript": "brand:typescript",
     "Python": "brand:python",
     "Rust": "brand:rust",
-    "HTML": "language",
+    "HTML": "brand:html5",
     "CSS": "palette",
-    "Shell": "terminal",
+    "Kotlin": "brand:kotlin",
+    "Shell": "brand:shell",
 }
-
-STACK = [
-    ("Main", [("code", "JavaScript"), ("brand:typescript", "TypeScript"), ("brand:python", "Python"), ("terminal", "Node.js")]),
-    ("Also", [("language", "HTML5"), ("palette", "CSS3"), ("brand:react", "React"), ("deployed_code", "Baileys API")]),
-    ("Tools", [("brand:git", "Git"), ("brand:githubactions", "GitHub Actions"), ("terminal", "Linux / Arch"), ("code", "VS Code")]),
-]
-
-ABOUT = [
-    ("code", "Bot Architect & Web UI/UX Builder"),
-    ("deployed_code", "Crafting modular automation systems like WolfieMD"),
-    ("palette", "Obsessed with clean, zero-bloat & pixel-perfect design"),
-    ("monitoring", "Focused on Performance, Stability, and Privacy"),
-]
-
-BUTTONS = [
-    ("site", "afh21-21.github.io", "language", "filled"),
-    ("repos", "All repositories", "book_2", "tonal"),
-]
 
 
 # Helpers
@@ -73,18 +58,24 @@ def text_width(s, size, weight=400):
 
 
 def wrap(s, size, width, weight=400, lines=2):
-    out, cur = [], ""
-    for word in s.split():
-        trial = f"{cur} {word}".strip()
-        if text_width(trial, size, weight) <= width:
-            cur = trial
-        else:
+    out = []
+    for raw_line in s.split("\n"):
+        cur = ""
+        for word in raw_line.split():
+            trial = f"{cur} {word}".strip()
+            if text_width(trial, size, weight) <= width:
+                cur = trial
+            else:
+                if cur:
+                    out.append(cur)
+                cur = word
+        if cur:
             out.append(cur)
-            cur = word
-    out.append(cur)
+    if not out:
+        out = [""]
     if len(out) > lines:
         out = out[:lines]
-        while text_width(out[-1] + "…", size, weight) > width:
+        while text_width(out[-1] + "…", size, weight) > width and " " in out[-1]:
             out[-1] = out[-1].rsplit(" ", 1)[0]
         out[-1] += "…"
     return out
@@ -104,7 +95,7 @@ def shape(kind, cx, cy, r):
         "sunny": (8, 0.1, 2.2),
         "flower": (8, 0.16, 1.0),
         "pill": (2, 0.0, 1.0),
-    }[kind]
+    }.get(kind, (9, 0.07, 1.0))
     pts = []
     steps = 180
     for i in range(steps):
@@ -151,7 +142,6 @@ def svg(w, h, body, title):
 .spin{{transform-box:fill-box;transform-origin:center;animation:spin 40s linear infinite}}
 .spin-r{{transform-box:fill-box;transform-origin:center;animation:spin 28s linear infinite reverse}}
 .bob{{transform-box:fill-box;transform-origin:center;animation:bob 7s ease-in-out infinite}}
-.breathe{{transform-box:fill-box;transform-origin:center;animation:breathe 6s ease-in-out infinite}}
 .grow{{transform-box:fill-box;transform-origin:left center;animation:grow 1.1s cubic-bezier(.2,0,0,1) both}}
 .wght{{animation:wght 1.6s cubic-bezier(.2,0,0,1) .2s both}}
 .wave{{animation:wave 2.4s linear infinite}}
@@ -160,7 +150,6 @@ def svg(w, h, body, title):
 @keyframes fade{{from{{opacity:0}}to{{opacity:1}}}}
 @keyframes spin{{to{{transform:rotate(360deg)}}}}
 @keyframes bob{{0%,100%{{transform:translateY(0) rotate(0)}}50%{{transform:translateY(-10px) rotate(12deg)}}}}
-@keyframes breathe{{0%,100%{{transform:scale(1)}}50%{{transform:scale(1.06)}}}}
 @keyframes grow{{from{{transform:scaleX(0)}}to{{transform:scaleX(1)}}}}
 @keyframes wght{{from{{font-variation-settings:'ROND' 100,'wght' 400}}to{{font-variation-settings:'ROND' 100,'wght' 760}}}}
 @keyframes wave{{from{{transform:translateX(0)}}to{{transform:translateX(-48px)}}}}
@@ -203,34 +192,41 @@ def avatar_data():
 
 # Blocks
 def hero(p, avatar):
-    h = 300
+    hc = CFG.get("hero", {})
+    greeting = hc.get("greeting", "Hi, I'm")
+    display_name = hc.get("name") or USER
+    subtitle = hc.get("subtitle", "")
+    ava_shape = hc.get("avatarShape", "cookie12")
+    chips_cfg = hc.get("chips", [])
+
+    h = 310
     b = [f'<clipPath id="card"><rect width="{W}" height="{h}" rx="32"/></clipPath>']
     b.append(f'<rect width="{W}" height="{h}" rx="32" fill="{p["surfaceContainer"]}" stroke="{p["outlineVariant"]}" stroke-width="1.5"/>')
     b.append('<g clip-path="url(#card)">')
     b.append(f'<path class="spin" d="{shape("flower", 780, 30, 150)}" fill="{p["primaryContainer"]}" opacity="0.65"/>')
-    b.append(f'<path class="bob" d="{shape("clover", 690, 292, 62)}" fill="{p["tertiaryContainer"]}" opacity="0.65"/>')
-    b.append(f'<path class="spin-r" d="{shape("sunny", 812, 236, 34)}" fill="{p["secondaryContainer"]}" opacity="0.8"/>')
+    b.append(f'<path class="bob" d="{shape("clover", 690, 300, 62)}" fill="{p["tertiaryContainer"]}" opacity="0.65"/>')
+    b.append(f'<path class="spin-r" d="{shape("sunny", 812, 240, 34)}" fill="{p["secondaryContainer"]}" opacity="0.8"/>')
     b.append("</g>")
-    cx, cy = 150, 150
+    cx, cy = 150, 155
     b.append(f'<path class="spin" d="{shape("sunny", cx, cy, 112)}" fill="{p["primary"]}" opacity=".95"/>')
-    b.append(f'<clipPath id="ava"><path d="{shape("cookie12", cx, cy, 98)}"/></clipPath>')
-    b.append(f'<path d="{shape("cookie12", cx, cy, 102)}" fill="{p["surfaceContainer"]}"/>')
+    b.append(f'<clipPath id="ava"><path d="{shape(ava_shape, cx, cy, 98)}"/></clipPath>')
+    b.append(f'<path d="{shape(ava_shape, cx, cy, 102)}" fill="{p["surfaceContainer"]}"/>')
     if avatar:
         b.append(f'<g class="fade"><image href="{avatar}" x="{cx - 100}" y="{cy - 100}" width="200" height="200" clip-path="url(#ava)" preserveAspectRatio="xMidYMid slice"/></g>')
     else:
-        b.append(f'<path d="{shape("cookie12", cx, cy, 98)}" fill="{p["primaryContainer"]}"/>')
+        b.append(f'<path d="{shape(ava_shape, cx, cy, 98)}" fill="{p["primaryContainer"]}"/>')
     x = 294
-    b.append(txt(x, 92, "Hi, I'm", 22, p["onSurfaceVariant"], 500, "up", 0.1))
-    b.append(f'<g class="up" style="animation-delay:.2s">{txt(x - 3, 156, USER, 64, p["onSurface"], 400, "wght")}</g>')
-    lines = wrap("Bot developer & UI/UX builder. Driven by Performance, Stability, and Privacy.", 19, 460, 400, 2)
+    b.append(txt(x, 86, greeting, 22, p["onSurfaceVariant"], 500, "up", 0.1))
+    b.append(f'<g class="up" style="animation-delay:.2s">{txt(x - 3, 148, display_name, 62, p["onSurface"], 400, "wght")}</g>')
+    lines = wrap(subtitle, 18, 490, 400, 2)
     for i, line in enumerate(lines):
-        b.append(txt(x, 194 + i * 26, line, 19, p["onSurfaceVariant"], 400, "up", 0.35 + i * 0.08))
+        b.append(txt(x, 184 + i * 25, line, 18, p["onSurfaceVariant"], 400, "up", 0.35 + i * 0.08))
     cx2 = x
-    for i, (ic, label) in enumerate([("location_on", "Indonesia · WIB"), ("code", "JS · Python · Linux"), ("favorite", "Imperial Craft")]):
-        g, w = chip(cx2, 236, label, p, ic, 0.6 + i * 0.1, style="tonal")
+    for i, item in enumerate(chips_cfg):
+        g, w = chip(cx2, 244, item["label"], p, item.get("icon"), 0.6 + i * 0.1, style="tonal")
         b.append(g)
         cx2 += w + 8
-    return svg(W, h, "".join(b), f"Hi, I'm {USER}")
+    return svg(W, h, "".join(b), f"{greeting} {display_name}")
 
 
 def section_title(x, y, label, ic, p, delay=0.0):
@@ -240,32 +236,39 @@ def section_title(x, y, label, ic, p, delay=0.0):
 
 
 def about(p):
-    row = 54
-    h = 92 + row * len(ABOUT)
+    ac = CFG.get("about", {})
+    title = ac.get("title", "About me").strip()
+    items = ac.get("items", [])
+    row = 52
+    h = 92 + row * len(items)
     b = [f'<rect width="{W}" height="{h}" rx="32" fill="{p["surfaceContainerLow"]}" stroke="{p["outlineVariant"]}" stroke-width="1"/>']
-    b.append(section_title(28, 26, "About me", "favorite", p))
-    for i, (ic, label) in enumerate(ABOUT):
+    b.append(section_title(28, 26, title, "favorite", p))
+    for i, item in enumerate(items):
         y = 86 + i * row
-        b.append(f'<g class="up" style="animation-delay:{0.15 + i * 0.1:.2f}s">')
+        b.append(f'<g class="up" style="animation-delay:{0.15 + i * 0.07:.2f}s">')
         b.append(f'<rect x="28" y="{y}" width="{W - 56}" height="{row - 8}" rx="16" fill="{p["surfaceContainerHigh"]}"/>')
         b.append(f'<circle cx="54" cy="{y + (row - 8) / 2}" r="15" fill="{p["secondaryContainer"]}"/>')
-        b.append(icon(ic, 45, y + (row - 8) / 2 - 9, 18, p["primary"]))
-        b.append(txt(82, y + (row - 8) / 2 + 6, label, 17, p["onSurface"], 500))
+        b.append(icon(item["icon"], 45, y + (row - 8) / 2 - 9, 18, p["primary"]))
+        b.append(txt(82, y + (row - 8) / 2 + 6, item["label"], 16, p["onSurface"], 500))
         b.append("</g>")
-    return svg(W, h, "".join(b), "About me")
+    return svg(W, h, "".join(b), title)
 
 
 def stack(p):
+    sc = CFG.get("stack", {})
+    sec_title = sc.get("title", "Tech stack")
+    groups_cfg = sc.get("groups", [])
     b = []
     y = 86
     d = 0.1
     groups = []
-    for title, items in STACK:
+    for grp in groups_cfg:
         gy = y
-        groups.append(txt(28, gy + 14, title.upper(), 12, p["primary"], 600, "fade", d, extra=' letter-spacing="1.4"'))
+        groups.append(txt(28, gy + 14, grp["title"].upper(), 12, p["primary"], 600, "fade", d, extra=' letter-spacing="1.4"'))
         x = 28
         cy = gy + 26
-        for ic, label in items:
+        for item in grp["items"]:
+            ic, label = item["icon"], item["label"]
             _, w = chip(0, 0, label, p, ic)
             if x + w > W - 28:
                 x = 28
@@ -273,13 +276,13 @@ def stack(p):
             g, w = chip(x, cy, label, p, ic, d)
             groups.append(g)
             x += w + 8
-            d += 0.05
+            d += 0.04
         y = cy + 36 + 22
     h = y + 6
     b.append(f'<rect width="{W}" height="{h}" rx="32" fill="{p["surfaceContainerLow"]}" stroke="{p["outlineVariant"]}" stroke-width="1"/>')
-    b.append(section_title(28, 26, "Tech stack", "code", p))
+    b.append(section_title(28, 26, sec_title, "code", p))
     b.extend(groups)
-    return svg(W, h, "".join(b), "Tech stack")
+    return svg(W, h, "".join(b), sec_title)
 
 
 def pick_icon(pin):
@@ -299,11 +302,12 @@ def pin_tags(pin):
 
 
 def card(p, pin, index):
+    pc = CFG.get("projects", {})
     w, h = 412, 232
     d0 = 0.08 * index
     proj = {
         "title": pin["name"],
-        "text": pin["text"] or "Engineered with focus on performance and clean architecture.",
+        "text": pin["text"] or pc.get("empty", "No description yet."),
         "tags": pin_tags(pin),
         "icon": pick_icon(pin),
         "shape": SHAPES[index % len(SHAPES)],
@@ -318,10 +322,11 @@ def card(p, pin, index):
     tx = 24
     b.append(txt(tx, 116, proj["title"], 23, p["onSurface"], 650, "up", d0 + 0.1))
     if proj.get("fork"):
-        fw = text_width("Fork", 12, 600) + 18
+        fork_lbl = pc.get("fork", "Fork")
+        fw = text_width(fork_lbl, 12, 600) + 18
         fx = tx + text_width(proj["title"], 23, 650) + 10
         b.append(f'<g class="pop" style="animation-delay:{d0 + .25:.2f}s"><rect x="{fx:.1f}" y="98" width="{fw:.1f}" height="22" rx="11" fill="{p["tertiaryContainer"]}"/>')
-        b.append(txt(fx + fw / 2, 113, "Fork", 12, p["onTertiaryContainer"], 600, anchor="middle") + "</g>")
+        b.append(txt(fx + fw / 2, 113, fork_lbl, 12, p["onTertiaryContainer"], 600, anchor="middle") + "</g>")
     for i, line in enumerate(wrap(proj["text"], 15, w - 48, 400, 2)):
         b.append(txt(tx, 142 + i * 21, line, 15, p["onSurfaceVariant"], 400, "up", d0 + 0.18 + i * 0.05))
     x = tx
@@ -340,6 +345,7 @@ def card(p, pin, index):
 
 
 def stats(p, s):
+    stc = CFG.get("stats", {})
     langs = s["languages"]
     total = sum(v for _, v in langs) or 1
     legend = []
@@ -353,12 +359,12 @@ def stats(p, s):
         x += lw
     h = 400 + row * 26
     b = [f'<rect width="{W}" height="{h}" rx="32" fill="{p["surfaceContainerLow"]}" stroke="{p["outlineVariant"]}" stroke-width="1"/>']
-    b.append(section_title(28, 26, "GitHub activity", "monitoring", p))
+    b.append(section_title(28, 26, stc.get("title", "GitHub Activity"), "monitoring", p))
     tiles = [
-        ("star", f"{s['stars']}", "Stars earned", "cookie"),
-        ("commit", f"{s['contributions']}", "Contributions this year", "clover"),
-        ("book_2", f"{s['repos']}", "Public repos", "sunny"),
-        ("group", f"{s['followers']}", "Followers", "flower"),
+        ("star", f"{s['stars']}", stc.get("stars", "Stars"), "cookie"),
+        ("commit", f"{s['contributions']}", stc.get("contributions", "Commits & Actions"), "clover"),
+        ("book_2", f"{s['repos']}", stc.get("repos", "Artifacts"), "sunny"),
+        ("group", f"{s['followers']}", stc.get("followers", "Allies"), "flower"),
     ]
     for i, (ic, value, label, sh) in enumerate(tiles):
         tx = 28 + (i % 2) * 196
@@ -372,11 +378,11 @@ def stats(p, s):
         b.append(txt(tx + 20, ty + 78, label, 14, p["onSurfaceVariant"], 500))
         b.append("</g>")
     rx = 432
-    b.append(txt(rx, 100, "Last 21 days (WIB)", 14, p["onSurfaceVariant"], 600, "fade", 0.1))
+    b.append(txt(rx, 100, f"{stc.get('calendar', 'Last 21 days')} (WIB)", 14, p["onSurfaceVariant"], 600, "fade", 0.1))
     gap = 6
     cw = (W - 28 - rx - gap * 6) / 7
     ch = 46
-    for i, letter in enumerate("SMTWTFS"):
+    for i, letter in enumerate(stc.get("weekdays", "SMTWTFS")):
         b.append(txt(rx + i * (cw + gap) + cw / 2, 124, letter, 12, p["onSurfaceVariant"], 600, "fade", 0.15, anchor="middle"))
     base = p["surfaceContainerHighest"]
     levels = [base, mix(base, p["primary"], .4), mix(base, p["primary"], .65), mix(base, p["primary"], .85), p["primary"]]
@@ -397,11 +403,11 @@ def stats(p, s):
             cell += txt(x + cw / 2, y + ch / 2 + 5, str(d["day"]), 14, fg, 600, anchor="middle")
             b.append(f'<g class="pop" style="animation-delay:{delay:.3f}s">{cell}</g>')
     ly = 322
-    b.append(txt(28, ly, "Languages across all repositories", 14, p["onSurfaceVariant"], 600, "fade", 0.3))
+    b.append(txt(28, ly, stc.get("languages", "Languages across my repositories"), 14, p["onSurfaceVariant"], 600, "fade", 0.3))
     surf = p["surfaceContainerLow"]
     colors = [p["primary"], p["tertiary"], p["secondary"], mix(p["primary"], surf, .45), mix(p["tertiary"], surf, .45), mix(p["secondary"], surf, .45), p["outline"], p["outlineVariant"]]
     bw = W - 56
-    gaps = 4 * (len(langs) - 1)
+    gaps = 4 * (len(langs) - 1) if langs else 0
     widths = [max(8.0, (bw - gaps) * v / total) for _, v in langs]
     k = (bw - gaps) / (sum(widths) or 1)
     x = 28
@@ -414,7 +420,7 @@ def stats(p, s):
         ly2 = ly + 50 + lrow * 26
         b.append(f'<g class="fade" style="animation-delay:{0.6 + i * 0.06:.2f}s"><circle cx="{lx + 5}" cy="{ly2 - 5}" r="5" fill="{colors[i % len(colors)]}"/>')
         b.append(txt(lx + 15, ly2, label, 14, p["onSurfaceVariant"], 500) + "</g>")
-    return svg(W, h, "".join(b), "GitHub activity")
+    return svg(W, h, "".join(b), stc.get("title", "GitHub Activity"))
 
 
 def button(p, label, ic, kind):
@@ -429,6 +435,13 @@ def button(p, label, ic, kind):
     b.append(icon(ic, 28, (h - 22) / 2, 22, fg))
     b.append(txt(28 + 22 + 10, h / 2 + 6, label, size, fg, 600) + "</g>")
     return svg(round(w), h, "".join(b), label)
+
+
+def social_btn(p, ic):
+    s = 48
+    b = [f'<g class="pop"><rect x="0.5" y="0.5" width="{s - 1}" height="{s - 1}" rx="16" fill="{p["surfaceContainerHigh"]}" stroke="{p["outlineVariant"]}"/>']
+    b.append(icon(ic, (s - 22) / 2, (s - 22) / 2, 22, p["primary"]) + "</g>")
+    return svg(s, s, "".join(b), ic)
 
 
 def wave(p):
@@ -540,17 +553,32 @@ def pic(name, alt, width="100%"):
 def readme(pins):
     cards = [f'<a href="{pin["url"]}">{pic("project-" + slug(pin["name"]), pin["name"], "49%")}</a>' for pin in pins]
     rows = [" ".join(cards[i:i + 2]) for i in range(0, len(cards), 2)]
+
+    btns_cfg = CFG.get("buttons", {}).get("items", [])
+    btn_links = []
+    for i, item in enumerate(btns_cfg):
+        url = item.get("url") or (f"https://github.com/{USER}?tab=repositories" if "repos" in item["label"].lower() else f"https://{USER}.github.io")
+        if "example.com" in url:
+            url = f"https://{USER}.github.io"
+        btn_links.append(f'<a href="{url}">{pic(f"button-{i}", item["label"], "auto")}</a>')
+
+    socs_cfg = CFG.get("socials", {}).get("items", [])
+    soc_links = []
+    for i, item in enumerate(socs_cfg):
+        url = item["url"].replace("t.me/@", "t.me/")
+        soc_links.append(f'<a href="{url}">{pic(f"social-{i}", item["icon"], "auto")}</a>')
+
     blocks = [
         pic("hero", f"Hi, I'm {USER}"),
-        pic("about", "About me"),
-        pic("stack", "Tech stack"),
+        pic("about", "About Me"),
+        pic("stack", "Tech Stack"),
         *rows,
-        pic("stats", "GitHub activity"),
+        pic("stats", "GitHub Activity"),
         pic("wave", ""),
-        f'<a href="https://afh21-21.github.io">{pic("button-site", "afh21-21.github.io", "auto")}</a>  '
-        f'<a href="https://github.com/{USER}?tab=repositories">{pic("button-repos", "All repositories", "auto")}</a>',
+        "  ".join(btn_links),
+        "  ".join(soc_links),
     ]
-    return '<div align="center">\n\n' + "\n\n".join(blocks) + "\n\n</div>\n"
+    return '<div align="center">\n\n' + "\n\n".join([blk for blk in blocks if blk]) + "\n\n</div>\n"
 
 
 # Main
@@ -568,7 +596,7 @@ def main():
         print("stats failed:", e)
         s = None
     if s is None:
-        s = dict(cached)
+        s = dict(cached) if cached else {"stars": 0, "contributions": 0, "repos": 0, "followers": 0, "languages": [], "days": [[None]*7]*3, "pins": []}
     avatar = avatar_data()
     s["avatar"] = hashlib.sha1(avatar.encode()).hexdigest()[:12] if avatar else (cached or {}).get("avatar")
     if "--if-changed" in sys.argv and cached and meaningful(s) == meaningful(cached):
@@ -586,8 +614,11 @@ def main():
         }
         for i, pin in enumerate(s["pins"]):
             files[f"project-{slug(pin['name'])}"] = card(p, pin, i)
-        for key, label, ic, kind in BUTTONS:
-            files[f"button-{key}"] = button(p, label, ic, kind)
+        for i, item in enumerate(CFG.get("buttons", {}).get("items", [])):
+            kind = "filled" if i == 0 else item.get("style", "tonal")
+            files[f"button-{i}"] = button(p, item["label"], item["icon"], kind)
+        for i, item in enumerate(CFG.get("socials", {}).get("items", [])):
+            files[f"social-{i}"] = social_btn(p, item["icon"])
         for name, content in files.items():
             (OUT / f"{name}-{theme}.svg").write_text(content, encoding="utf-8")
     keep = {f"project-{slug(pin['name'])}" for pin in s["pins"]}

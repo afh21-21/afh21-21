@@ -10,8 +10,9 @@ on:
     branches: [main]
     paths:
       - 'generate.py'
+      - 'profile.json'
       - 'data/palette.json'
-      - '.github/workflows/update.yml'
+      - '.github/workflows/update.yaml'
 
 permissions:
   contents: write
