@@ -2,17 +2,15 @@ name: Update Imperial Profile
 
 on:
   schedule:
-    # Jalan setiap jam 00:05 WIB (17:05 UTC) dan 12:05 WIB (05:05 UTC)
-    - cron: '5 17 * * *'
-    - cron: '5 5 * * *'
-  workflow_dispatch:
+    # Jalan otomatis setiap hari pukul 00:05 WIB (17:05 UTC) & setiap 6 jam sekali
+    - cron: "5 17 * * *"
+    - cron: "0 */6 * * *"
+  workflow_dispatch: # Tombol manual "Run workflow" di tab Actions
   push:
-    branches: [main]
     paths:
-      - 'generate.py'
-      - 'profile.json'
-      - 'data/palette.json'
-      - '.github/workflows/update.yaml'
+      - "generate.py"
+      - "data/palette.json"
+      - ".github/workflows/update.yml"
 
 permissions:
   contents: write
@@ -24,22 +22,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Generate Imperial SVGs
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PROFILE_TOKEN || github.token }}
         run: python generate.py
 
-      - name: Commit & Push updated profile
+      - name: Commit and push updated assets
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add assets/ data/stats.json README.md
-          if ! git diff --cached --quiet; then
-            git commit -m "chore(profile): update imperial svgs [skip ci]"
-            git push
-          fi
+          git diff --staged --quiet || git commit -m "chore: update imperial profile stats"
+          git push
