@@ -405,7 +405,9 @@ def stats(p, s):
             x, row = 28, row + 1
         legend.append((x, row, label))
         x += lw
-    h = 400 + row * 26
+    
+    # Naikkan tinggi dasar SVG dari 400 ke 440 agar muat sempurna ke bawah
+    h = 440 + row * 26  
     b = [f'<rect width="{W}" height="{h}" rx="32" fill="{p["surfaceContainerLow"]}"/>']
     b.append(section_title(28, 26, "GitHub Activity", "monitoring", p))
     tiles = [
@@ -450,7 +452,9 @@ def stats(p, s):
                 cell += f'<rect x="{x - 3:.1f}" y="{y - 3}" width="{cw + 6:.1f}" height="{ch + 6}" rx="17" fill="none" stroke="{p["primary"]}" stroke-width="2"/>'
             cell += txt(x + cw / 2, y + ch / 2 + 5, str(d["day"]), 14, fg, 600, anchor="middle")
             b.append(f'<g class="pop" style="animation-delay:{delay:.3f}s">{cell}</g>')
-    ly = 322
+    
+    # Geser posisi Y ke bawah sedikit agar posisinya pas di bawah kalender & tiles
+    ly = 345  
     b.append(txt(28, ly, "Languages across my repositories", 14, p["onSurfaceVariant"], 600, "fade", 0.3))
     surf = p["surfaceContainerLow"]
     colors = [p["primary"], p["tertiary"], p["secondary"], mix(p["primary"], surf, .45), mix(p["tertiary"], surf, .45), mix(p["secondary"], surf, .45), p["outline"], p["outlineVariant"]]
