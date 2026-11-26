@@ -6,8 +6,6 @@
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="assets/stack-dark.svg"><img src="assets/stack-light.svg" width="100%" alt="Tech stack"></picture>
 
-<a href="https://github.com/afh21-21/afh21-21.github.io"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/project-afh21-21-github-io-dark.svg"><img src="assets/project-afh21-21-github-io-light.svg" width="49%" alt="afh21-21.github.io"></picture></a>
-
 <picture><source media="(prefers-color-scheme: dark)" srcset="assets/stats-dark.svg"><img src="assets/stats-light.svg" width="100%" alt="GitHub Activity"></picture>
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="assets/wave-dark.svg"><img src="assets/wave-light.svg" width="100%" alt=""></picture>
