@@ -3,7 +3,24 @@
  "contributions": 95,
  "repos": 2,
  "followers": 0,
- "languages": [],
+ "languages": [
+  [
+   "Python",
+   29228
+  ],
+  [
+   "HTML",
+   18009
+  ],
+  [
+   "JavaScript",
+   12784
+  ],
+  [
+   "CSS",
+   12054
+  ]
+ ],
  "days": [
   [
    {
