@@ -507,6 +507,11 @@ def wave(p):
     b.append(f'<path class="wave" d="{d}" fill="none" stroke="{p["primary"]}" stroke-width="5" stroke-linecap="round"/></g>')
     return svg(W, h, "".join(b), "divider")
 
+def footer(p):
+    h = 32
+    label = "Made by The_Flynner's"
+    b = [txt(W / 2, 20, label, 13, p["onSurfaceVariant"], 500, "fade", 0.2, anchor="middle")]
+    return svg(W, h, "".join(b), label)
 
 # Data
 def token():
@@ -615,13 +620,14 @@ def readme(pins):
     ]
     blocks = [
         pic("hero", f"Hi, I'm {USER}"),
-        pic("about", "About Me & My Enthusiast"),
+        pic("about", "About Me & My Tech Enthusiast"),
         pic("stack", "Tech stack"),
         *rows,
         pic("stats", "GitHub Activity"),
         pic("wave", ""),
         "  ".join(btn_links),
         "  ".join(soc_links),
+        pic("footer", "Made by The_Flynner's"),
     ]
     return '<div align="center">\n\n' + "\n\n".join(blocks) + "\n\n</div>\n"
 
@@ -658,6 +664,7 @@ def main():
             "stack": stack(p),
             "stats": stats(p, s),
             "wave": wave(p),
+            "footer": footer(p),
         }
         for i, pin in enumerate(s["pins"]):
             files[f"project-{slug(pin['name'])}"] = card(p, pin, i)
