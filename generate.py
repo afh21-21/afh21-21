@@ -162,15 +162,22 @@ def shape(kind, cx, cy, r):
 def icon(name, x, y, size, fill):
     if name.startswith("brand:"):
         key = name[6:]
-        if key in ICONS.get("brand", {}):
-            d = ICONS["brand"][key]
+        brand_item = ICONS.get("brand", {}).get(key)
+        if brand_item:
+            d = brand_item["d"] if isinstance(brand_item, dict) else brand_item
             s = size / 24
             return f'<path d="{d}" fill="{fill}" transform="translate({x:.1f} {y:.1f}) scale({s:.4f})"/>'
         name = "code"
     sym = ICONS["symbol"].get(name) or ICONS["symbol"]["code"]
-    vx, vy, vw, vh = [float(v) for v in sym["vb"].split()]
+    if isinstance(sym, dict):
+        vb = sym.get("vb", "0 -960 960 960")
+        d = sym["d"]
+    else:
+        vb = "0 -960 960 960"
+        d = sym
+    vx, vy, vw, vh = [float(v) for v in vb.split()]
     s = size / vw
-    return f'<path d="{sym["d"]}" fill="{fill}" transform="translate({x - vx * s:.1f} {y - vy * s:.1f}) scale({s:.4f})"/>'
+    return f'<path d="{d}" fill="{fill}" transform="translate({x - vx * s:.1f} {y - vy * s:.1f}) scale({s:.4f})"/>'
 
 
 def txt(x, y, s, size, fill, weight=400, cls="", delay=None, anchor="start", extra=""):
@@ -597,7 +604,7 @@ def pic(name, alt, width="100%"):
 
 def readme(pins):
     cards = [f'<a href="{pin["url"]}">{pic("project-" + slug(pin["name"]), pin["name"], "49%")}</a>' for pin in pins]
-    rows = [" ".join(cards[i:i + 2]) for i in range(0, len(cards), 2)]
+    rows = [" ".join(cards[i:i + 2]) for i in range(0, len(cards), 2)]
     btn_links = [
         f'<a href="{url}">{pic("button-" + key, label, "auto")}</a>'
         for key, label, _, _, url in BUTTONS
@@ -613,8 +620,8 @@ def readme(pins):
         *rows,
         pic("stats", "GitHub Activity"),
         pic("wave", ""),
-        "  ".join(btn_links),
-        "  ".join(soc_links),
+        "  ".join(btn_links),
+        "  ".join(soc_links),
     ]
     return '<div align="center">\n\n' + "\n\n".join(blocks) + "\n\n</div>\n"
 
