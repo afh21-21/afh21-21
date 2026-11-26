@@ -109,6 +109,27 @@
    null
   ]
  ],
- "pins": [],
+ "pins": [
+  {
+   "name": "afh21-21.github.io",
+   "url": "https://github.com/afh21-21/afh21-21.github.io",
+   "text": "my LinkTREE website",
+   "fork": false,
+   "stars": 0,
+   "language": "HTML",
+   "topics": []
+  },
+  {
+   "name": "afh21-21",
+   "url": "https://github.com/afh21-21/afh21-21",
+   "text": "About Me & My Enthusiast",
+   "fork": false,
+   "stars": 1,
+   "language": "Python",
+   "topics": [
+    "telling"
+   ]
+  }
+ ],
  "avatar": "2aaf46929ebd"
 }
