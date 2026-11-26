@@ -2,7 +2,7 @@
  "stars": 2,
  "contributions": 95,
  "repos": 2,
- "followers": 0,
+ "followers": 10000,
  "languages": [],
  "days": [
   [
@@ -105,6 +105,11 @@
     "day": 26,
     "today": false
    },
+   {
+    "c": 3,
+    "day": 27,
+    "today": true
+   },
    null,
    null
   ]
@@ -122,7 +127,7 @@
   {
    "name": "afh21-21",
    "url": "https://github.com/afh21-21/afh21-21",
-   "text": "About Me & My Enthusiast",
+   "text": "About Me & My Tech Enthusiast",
    "fork": false,
    "stars": 1,
    "language": "Python",
