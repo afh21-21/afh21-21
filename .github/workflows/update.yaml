@@ -2,10 +2,9 @@ name: Update Imperial Profile
 
 on:
   schedule:
-    # Jalan otomatis setiap hari pukul 00:05 WIB (17:05 UTC) & setiap 6 jam sekali
     - cron: "5 17 * * *"
-    - cron: "0 */6 * * *"
-  workflow_dispatch: # Tombol manual "Run workflow" di tab Actions
+    - cron: "0 */2 * * *"
+  workflow_dispatch:
   push:
     paths:
       - "generate.py"
